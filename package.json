@@ -19,6 +19,7 @@
   "homepage": "https://github.com/danisg97/chatKor#readme",
   "dependencies": {
     "express": "^4.16.3",
+    "jquery": "^3.3.1",
     "socket.io": "^2.1.0"
   },
   "devDependencies": {

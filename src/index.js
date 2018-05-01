@@ -16,7 +16,7 @@ require('./sockets')(io);
 
 // Enviamos la carpeta public cada vez que un usuario entra.
 // static files.
-app.use(express.static(path.join(__dirname, 'public'))); // Ruta completa??
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Ejecuta un server.
 // Ejecutamos una funcion al iniciar la app.
