@@ -8,6 +8,29 @@ $(function() {
   const $messageBox = $('#message');
   const $chat = $('#chat');
 
+  // Obteniendo los elementos del DOM desde el nicknameForm.
+  const $nickForm = $('#nickForm');
+  const $nickError = $('#nickError');
+  const $nickname = $('#nickname');
+
+  const $users = $('#usernames');
+
+  // Evento: login.
+  $nickForm.submit(e => {
+    e.preventDefault();
+    socket.emit('new user', $nickname.val(), data => {
+      if(data) {
+        $('#nickWrap').hide();
+        $('#contentWrap').show();
+      } else {
+        $nickError.html(`
+          <div class="alert alert-danger">That username already exits.</div>
+        `);
+      }
+      $nickname.val('');
+    });
+  })
+
   // Events.
   $messageForm.submit( e => {
     e.preventDefault();
@@ -19,7 +42,16 @@ $(function() {
 
   // Evento: recibir mensajes.
   socket.on('new message', function (data) {
-    $chat.append(data + '<br />');
+    $chat.append('<b>' + data.nick + ': ' + '</b>' + data.msg + '<br />');
+  });
+
+  // Evento: usuarios conectados.
+  socket.on('usernames', data => {
+    let html = '';
+    for (let i = 0; i < data.length; i++) {
+      html += `<p><i class="fas fa-user"></i> ${data[i]}</p>`;
+    }
+    $users.html(html);
   });
 
 })
