@@ -1,11 +1,19 @@
 // Server part Application.
+
+// Importamos el Schema de los datos.
+const Chat = require('./models/Chat');
+
 // Aceptaremos las conexiones con el socket.
 module.exports = function (io) {
 
   let users = {};
 
-  io.on('connection', socket => {
+  io.on('connection', async socket => {
     console.log('New user connected');
+
+    let messages = await Chat.find({}).limit(8);
+
+    socket.emit('load old msgs', messages);
 
     socket.on('new user', (data, cb) => {
       console.log(data);
@@ -21,8 +29,7 @@ module.exports = function (io) {
     });
 
     // Envio de mensajes.
-    socket.on('send message', (data, cb) => {
-
+    socket.on('send message', async (data, cb) => {
       // Eliminamos los espacios en blanco del String.
       var msg = data.trim();
 
@@ -45,6 +52,13 @@ module.exports = function (io) {
           cb('Error! Please enter your message');
         }
       } else {
+        // Chat Object.
+        var newMsg = new Chat({
+          msg,
+          nick: socket.nickname
+        });
+        await newMsg.save();
+
         io.sockets.emit('new message', {
           msg:data,
           nick: socket.nickname
