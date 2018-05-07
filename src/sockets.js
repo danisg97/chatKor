@@ -28,6 +28,10 @@ module.exports = function (io) {
       }
     });
 
+    socket.on('new registry', (data) => {
+      console.log("Datos CONSOLE.LOG recibidos correctamente");
+    });
+
     // Envio de mensajes.
     socket.on('send message', async (data, cb) => {
       // Eliminamos los espacios en blanco del String.
